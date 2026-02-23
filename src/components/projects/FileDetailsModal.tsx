@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { apiClient } from "@/src/lib/api";
-//import { ProjectDocument } from "@/src/lib/types";
+import { ProjectDocument } from "@/src/lib/types";
 import { GenericStep } from "./document-details/GenericStep";
 import { PartitioningStep } from "./document-details/PartitioningStep";
 import { ChunkingStep } from "./document-details/ChunkingStep";
@@ -15,7 +15,7 @@ import { ModalHeader } from "./document-details/ModalHeader";
 import { Modal } from "./document-details/Modal";
 
 interface FileDetailsModalProps {
-  document: any; //: ProjectDocument;
+  document: ProjectDocument;
   onClose: () => void;
 }
 
