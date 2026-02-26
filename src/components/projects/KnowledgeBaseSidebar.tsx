@@ -90,7 +90,7 @@ const documentUtils = {
 
   getIcon: (doc: ProjectDocument) => {
     if (doc.source_url) return <Globe size={14} className="text-gray-400" />;
-    const type = doc.file_type.toLowerCase();
+    const type = (doc.file_type || "").toLowerCase();
     if (type.includes("pdf"))
       return <FileText size={14} className="text-gray-400" />;
     if (type.includes("ppt") || type.includes("presentation"))

@@ -3,9 +3,9 @@
 import React, { use, useEffect, useState } from "react";
 import { ConversationsList } from "@/src/components/projects/ConversationsList";
 import { KnowledgeBaseSidebar } from "@/src/components/projects/KnowledgeBaseSidebar";
-import { FileDetailsModal } from "@/src//components/projects/FileDetailsModal";
+import { FileDetailsModal } from "@/src/components/projects/FileDetailsModal";
 import { useAuth } from "@clerk/nextjs";
-import { apiClient } from "@/src//lib/api";
+import { apiClient } from "@/src/lib/api";
 import { LoadingSpinner } from "@/src/components/ui/LoadingSpinner";
 import { NotFound } from "@/src/components/ui/NotFound";
 import toast from "react-hot-toast";
