@@ -5,6 +5,7 @@ import { ConversationsList } from "@/src/components/projects/ConversationsList";
 import { KnowledgeBaseSidebar } from "@/src/components/projects/KnowledgeBaseSidebar";
 import { FileDetailsModal } from "@/src/components/projects/FileDetailsModal";
 import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { apiClient } from "@/src/lib/api";
 import { LoadingSpinner } from "@/src/components/ui/LoadingSpinner";
 import { NotFound } from "@/src/components/ui/NotFound";
@@ -27,6 +28,7 @@ interface ProjectData {
 function ProjectPage({ params }: ProjectPageProps) {
   const { projectId } = use(params);
   const { getToken, userId } = useAuth();
+  const router = useRouter();
 
   // Data state
   const [data, setData] = useState<ProjectData>({
@@ -86,6 +88,38 @@ function ProjectPage({ params }: ProjectPageProps) {
     loadAllData();
   }, [userId, projectId]);
 
+  // Short POlling
+  useEffect(() => {
+    const hasProcessingDocuments = data.documents.some(
+      (doc) =>
+        doc.processing_status &&
+        !["completed", "failed"].includes(doc.processing_status)
+    );
+
+    if (!hasProcessingDocuments) {
+      return;
+    }
+
+    const pollInterval = setInterval(async () => {
+      try {
+        const token = await getToken();
+        const documentsRes = await apiClient.get(
+          `/api/projects/${projectId}/files`,
+          token
+        );
+
+        setData((prev) => ({
+          ...prev,
+          documents: documentsRes.data,
+        }));
+      } catch (err) {
+        console.error("Polling error:", err);
+      }
+    }, 2000);
+
+    return () => clearInterval(pollInterval);
+  }, [data.documents, projectId, getToken]);
+
   // Chat-related methods
   const handleCreateNewChat = async () => {
     if (!userId) return;
@@ -143,7 +177,7 @@ function ProjectPage({ params }: ProjectPageProps) {
   };
 
   const handleChatClick = (chatId: string) => {
-    console.log("Navigate to chat:", chatId);
+    router.push(`/projects/${projectId}/chats/${chatId}`);
   };
 
   // Document-related methods
